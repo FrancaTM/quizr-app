@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 // Project based on - Quizzler - A True/False Quiz App [https://www.udemy.com/flutter-bootcamp-with-dart/learn/lecture/14483450#questions]
 
+import 'package:rflutter_alert/rflutter_alert.dart';
+
 import 'quiz_brain.dart';
 
 QuizBrain quizBrain = QuizBrain();
@@ -38,12 +40,22 @@ class _QuizPageState extends State<QuizPage> {
     bool correctAnswer = quizBrain.getQuestionAnswer();
 
     setState(() {
-      if (correctAnswer == userPickedAnswer) {
-        scoreKeeper.add(Icon(Icons.check, color: Colors.green));
+      if (quizBrain.isFinished() == true) {
+        Alert(
+          context: context,
+          title: 'Finished!',
+          desc: 'You\'ve reached the end of the quiz',
+        ).show();
+        quizBrain.reset();
+        scoreKeeper = [];
       } else {
-        scoreKeeper.add(Icon(Icons.close, color: Colors.red));
+        if (correctAnswer == userPickedAnswer) {
+          scoreKeeper.add(Icon(Icons.check, color: Colors.green));
+        } else {
+          scoreKeeper.add(Icon(Icons.close, color: Colors.red));
+        }
+        quizBrain.nextQuestion();
       }
-      quizBrain.nextQuestion();
     });
   }
 
